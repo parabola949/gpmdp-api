@@ -18,14 +18,23 @@ namespace Testing
                     AuthCode = sr.ReadLine();
             }
 
+
+            //create client
             c = new Client();
+
+            //set up event handlers
             c.ConnectReceived += C_ConnectReceived;
             c.TrackResultReceived += C_TrackReceived;
             c.ApiVersionReceived += C_ApiVersionReceived;
             c.LibraryReceived += C_LibraryReceived;
             
+            //connect to the web socket
             c.Connect();
+
+            //authenticate, enables controls
             c.Authenticate(AuthCode);
+
+
             while (true)
             {
                 var k = Console.ReadKey(true);

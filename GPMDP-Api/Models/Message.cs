@@ -9,9 +9,9 @@ namespace GPMDP_Api.Models
     {
         [JsonProperty("channel")]
         public string Channel { get; set; }
-        public object Payload { get; set; }
+        internal object Payload { get; set; }
 
-        public Message ToObject(string data)
+        internal Message ToObject(string data)
         {
             var m = JsonConvert.DeserializeObject<Message>(data);
             switch (m.Channel)

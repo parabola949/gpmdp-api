@@ -8,11 +8,21 @@ namespace GPMDP_Api.Commands
 {
     public static class Playback
     {
+        /// <summary>
+        /// Play or Pause the current track
+        /// </summary>
+        /// <param name="c"></param>
         public static void PlayPause(this Client c)
         {
             c.SendCommand("playback", "playPause");
         }
 
+
+        /// <summary>
+        /// Get the current time in the track playing
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static TimeSpan GetCurrentTime(this Client c)
         {
             var r = c.GetCommand("playback", "getCurrentTime").Result;
@@ -20,11 +30,32 @@ namespace GPMDP_Api.Commands
             return TimeSpan.FromMilliseconds(ms);
         }
 
+        /// <summary>
+        /// Seek to a specific time
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="milliseconds"></param>
         public static void SetCurrentTime(this Client c, long milliseconds)
         {
             c.SendCommand("playback", "setCurrentTime", milliseconds);
         }
 
+        /// <summary>
+        /// Seek to a specific time
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="milliseconds"></param>
+        public static void SetCurrentTime(this Client c, TimeSpan time)
+        {
+            c.SendCommand("playback", "setCurrentTime", time.TotalMilliseconds);
+        }
+
+
+        /// <summary>
+        /// Gets the total length of the current track
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static TimeSpan GetTotalTime(this Client c)
         {
             var r = c.GetCommand("playback", "getTotalTime").Result;
@@ -32,24 +63,42 @@ namespace GPMDP_Api.Commands
             return TimeSpan.FromMilliseconds(ms);
         }
 
+
+        /// <summary>
+        /// Gets the current track
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static Track GetCurrentTrack(this Client c)
         {
             var r = c.GetCommand("playback", "getCurrentTrack").Result;
             return JsonConvert.DeserializeObject<Track>(r);
         }
 
+        /// <summary>
+        /// Checks if the track is playing or not
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public static bool IsPlaying(this Client c)
         {
             return bool.Parse(c.GetCommand("playback", "isPlaying").Result);
         }
 
-
-        public static void Rewind(this Client c)
+        /// <summary>
+        /// Go to the previous track
+        /// </summary>
+        /// <param name="c"></param>
+        public static void Previous(this Client c)
         {
             c.SendCommand("playback", "rewind");
         }
 
-        public static void Forward(this Client c)
+        /// <summary>
+        /// Go to the next track
+        /// </summary>
+        /// <param name="c"></param>
+        public static void Next(this Client c)
         {
             c.SendCommand("playback", "forward");
         }

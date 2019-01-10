@@ -19,22 +19,23 @@ namespace GPMDP_Api
         public int Port { get; set; }
         public string AppName { get; set; }
         
+        /// <summary>
+        /// Initialize the client with connection information
+        /// </summary>
+        /// <param name="appName">Can be anything, app or device name</param>
+        /// <param name="uri">The IP address of the client you want to connect to</param>
+        /// <param name="port">THe port GPDMP is running on</param>
         public Client(string appName = "gpmdp-api", string uri = "localhost", int port = 5672)
         {
             Uri = uri;
             Port = port;
             AppName = appName;
             ResultReceived += Client_ResultReceived;
-
-
-
         }
 
-        private void Client_ResultReceived(object sender, Result e)
-        {
-            _results[e.RequestId] = e;
-        }
-
+        /// <summary>
+        /// Connects to the client.  Do this after you've set up your event handlers
+        /// </summary>
         public void Connect()
         {
             if (_ws != null)
@@ -49,11 +50,21 @@ namespace GPMDP_Api
             _ws.Connect();
         }
 
+        /// <summary>
+        /// In order to SEND commands, you must authenticate first
+        /// </summary>
+        /// <param name="authCode"></param>
         public void Authenticate(string authCode = null)
         {
             SendCommand("connect", "connect", new[] { AppName, authCode });
         }
 
+        /// <summary>
+        /// Sends a simple command to the api
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="method"></param>
+        /// <param name="args"></param>
         public void SendCommand(string ns, string method, params object[] args)
         {
             var c = new Command
@@ -67,6 +78,13 @@ namespace GPMDP_Api
 
         private int reqId = 0;
         private Dictionary<int, Result> _results = new Dictionary<int, Result>();
+
+        /// <summary>
+        /// Gets the result of a command to the api
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public async Task<string> GetCommand(string ns, string method)
         {
             reqId++;
@@ -160,6 +178,11 @@ namespace GPMDP_Api
         public event EventHandler<string> ConnectReceived;
         public event EventHandler<Message> MessageReceived;
         internal event EventHandler<Result> ResultReceived;
+
+        private void Client_ResultReceived(object sender, Result e)
+        {
+            _results[e.RequestId] = e;
+        }
         #endregion
     }
 }
