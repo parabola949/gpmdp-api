@@ -1,10 +1,11 @@
-﻿using GPMDP_Api.Models;
+﻿using GPMDP_Api.Enums;
+using GPMDP_Api.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GPMDP_Api.Commands
+namespace GPMDP_Api.Playback
 {
     public static class Playback
     {
@@ -101,6 +102,66 @@ namespace GPMDP_Api.Commands
         public static void Next(this Client c)
         {
             c.SendCommand("playback", "forward");
+        }
+
+        public static object GetPlaybackState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ShuffleType GetShuffle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void SetShuffle(ShuffleType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ShuffleType ToggleShuffle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static RepeatType GetRepeat()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void SetRepeat(RepeatType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static RepeatType ToggleRepeat()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static bool IsPodcast()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TimeSpan RewindTen()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static TimeSpan ForwardThirty()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void ToggleVisualization()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void ImFeelingLucky()
+        {
+            throw new NotImplementedException();
         }
     }
 }

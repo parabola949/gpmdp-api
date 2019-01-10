@@ -172,7 +172,7 @@ namespace GPMDP_Api
         public event EventHandler<ShuffleType> ShuffleReceived;
         public event EventHandler<LikedValues> RatingReceived;
         public event EventHandler<RepeatType> RepeatReceived;
-        public event EventHandler<Playlist[]> PlaylistsReceived;
+        public event EventHandler<Models.Playlist[]> PlaylistsReceived;
         public event EventHandler<Results> SearchResultsReceived;
         public event EventHandler<Contents> LibraryReceived;
         public event EventHandler<string> ConnectReceived;
