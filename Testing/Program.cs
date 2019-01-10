@@ -33,6 +33,10 @@ namespace Testing
                         //play / pause
                         c.PlayPause();
                         break;
+                    case ConsoleKey.T:
+                        c.Forward();
+                        break;
+                       
                 }
             }
         }

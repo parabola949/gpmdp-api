@@ -80,6 +80,10 @@ namespace GPMDP_Api
                 var em = GetType().GetField($"{t.Name}Received", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this);
                 em?.GetType().GetMethod("Invoke").Invoke(em, new[] { this, nm.Payload });
             }
+            else
+            {
+                Console.WriteLine(e.Data);
+            }
         }
 
         #region Events
