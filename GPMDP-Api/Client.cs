@@ -18,11 +18,25 @@ namespace GPMDP_Api
         public string Uri { get; set; }
         public int Port { get; set; }
         public string AppName { get; set; }
+        
         public Client(string appName = "gpmdp-api", string uri = "localhost", int port = 5672)
         {
             Uri = uri;
             Port = port;
             AppName = appName;
+            ResultReceived += Client_ResultReceived;
+
+
+
+        }
+
+        private void Client_ResultReceived(object sender, Result e)
+        {
+            _results[e.RequestId] = e;
+        }
+
+        public void Connect()
+        {
             if (_ws != null)
             {
                 _ws.Close();
@@ -31,16 +45,11 @@ namespace GPMDP_Api
             _ws = new WebSocket($"ws://{Uri}:{Port}");
             _ws.OnMessage += _ws_OnMessage;
             _ws.OnError += _ws_OnError;
-            ResultReceived += Client_ResultReceived;
+
             _ws.Connect();
         }
 
-        private void Client_ResultReceived(object sender, Result e)
-        {
-            _results[e.RequestId] = e;
-        }
-
-        public void Connect(string authCode = null)
+        public void Authenticate(string authCode = null)
         {
             SendCommand("connect", "connect", new[] { AppName, authCode });
         }
@@ -105,8 +114,8 @@ namespace GPMDP_Api
                 {
                     ResultReceived?.Invoke(this, r);
                 }
-                else //DEBUG, checking for messages we don't know about
-                    Console.WriteLine(e.Data);
+                //else //DEBUG, checking for messages we don't know about
+                    //Console.WriteLine(e.Data);
                 return;
             }
 
@@ -124,12 +133,13 @@ namespace GPMDP_Api
             if (t != null)
             {
                 dynamic nm = Convert.ChangeType(m, t);
-                var em = GetType().GetField($"{t.Name}Received", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this);
+                var field = this.GetType().GetField($"{t.Name}Received", BindingFlags.Instance | BindingFlags.NonPublic);
+                var em = field?.GetValue(this);
                 em?.GetType().GetMethod("Invoke").Invoke(em, new[] { this, nm.Payload });
             }
             else
             {
-                Console.WriteLine(e.Data);
+                //Console.WriteLine(e.Data);
             }
         }
 

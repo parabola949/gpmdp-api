@@ -22,7 +22,10 @@ namespace Testing
             c.ConnectReceived += C_ConnectReceived;
             c.TrackResultReceived += C_TrackReceived;
             c.ApiVersionReceived += C_ApiVersionReceived;
-            c.Connect(AuthCode);
+            c.LibraryReceived += C_LibraryReceived;
+            
+            c.Connect();
+            c.Authenticate(AuthCode);
             while (true)
             {
                 var k = Console.ReadKey(true);
@@ -44,9 +47,14 @@ namespace Testing
             }
         }
 
+        private static void C_LibraryReceived(object sender, GPMDP_Api.Models.Contents e)
+        {
+            Console.WriteLine($"Library contents: {e.tracks.Length} tracks, {e.albums.Length} albums, {e.artists.Length} artists");
+        }
+
         private static void C_ApiVersionReceived(object sender, string e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Api Version: " + e);
         }
 
         private static void C_ConnectReceived(object sender, string e)
