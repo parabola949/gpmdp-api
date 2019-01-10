@@ -9,7 +9,7 @@ namespace GPMDP_Api.Models
     public class Library : Message
     {
         [JsonProperty("payload")]
-        public Contents Contents { get; set; }
+        new public Contents Payload { get; set; }
     }
 
     public class Contents

@@ -9,7 +9,7 @@ namespace GPMDP_Api.Models
     public class SearchResults : Message
     {
         [JsonProperty("payload")]
-        public Results Results { get; set; }
+        new public Results Payload { get; set; }
     }
 
     public class Results

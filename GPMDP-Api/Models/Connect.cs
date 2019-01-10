@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace GPMDP_Api.Models
 {
     public class Connect : Message
     {
-        public string payload { get; set; }
+        [JsonProperty("payload")]
+        public new string Payload { get; set; }
     }
 }

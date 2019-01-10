@@ -9,6 +9,7 @@ namespace GPMDP_Api.Models
     {
         [JsonProperty("channel")]
         public string Channel { get; set; }
+        public object Payload { get; set; }
 
         public Message ToObject(string data)
         {
@@ -44,7 +45,7 @@ namespace GPMDP_Api.Models
                 case "library":
                     return JsonConvert.DeserializeObject<Library>(data);
             }
-            return m;
+            return null;
         }
     }
 }

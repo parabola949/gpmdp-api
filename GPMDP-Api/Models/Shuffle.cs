@@ -11,6 +11,6 @@ namespace GPMDP_Api.Models
     {
         [JsonProperty("payload")]
         [JsonConverter(typeof(ShuffleTypeConverter))]
-        public ShuffleType Type { get; set; }
+        new public ShuffleType Payload { get; set; }
     }
 }

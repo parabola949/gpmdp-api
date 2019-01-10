@@ -9,7 +9,7 @@ namespace GPMDP_Api.Models
     public class Queue : Message
     {
         [JsonProperty("payload")]
-        public Track[] Tracks { get; set; }
+        new public Track[] Payload { get; set; }
     }
 }
 

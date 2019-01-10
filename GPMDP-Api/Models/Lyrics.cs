@@ -8,6 +8,6 @@ namespace GPMDP_Api.Models
     public class Lyrics : Message
     {
         [JsonProperty("payload")]
-        public string Payload { get; set; }
+        new public string Payload { get; set; }
     }
 }

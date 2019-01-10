@@ -8,7 +8,7 @@ namespace GPMDP_Api.Models
     public class Time : Message
     {
         [JsonProperty("payload")]
-        public TimeValues Values { get; set; }
+        new public TimeValues Payload { get; set; }
     }
 
     public class TimeValues

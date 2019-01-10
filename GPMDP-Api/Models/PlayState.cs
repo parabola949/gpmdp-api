@@ -8,6 +8,6 @@ namespace GPMDP_Api.Models
     public class PlayState : Message
     {
         [JsonProperty("payload")]
-        public bool IsPlaying { get; set; }
+        new public bool Payload { get; set; }
     }
 }

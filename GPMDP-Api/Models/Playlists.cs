@@ -9,7 +9,7 @@ namespace GPMDP_Api.Models
     public class Playlists : Message
     {
         [JsonProperty("payload")]
-        public Playlist[] Lists { get; set; }
+        new public Playlist[] Payload { get; set; }
     }
 
     public class Playlist

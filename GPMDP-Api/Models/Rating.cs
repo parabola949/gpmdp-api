@@ -8,7 +8,7 @@ namespace GPMDP_Api.Models
     public class Rating : Message
     {
         [JsonProperty("payload")]
-        public LikedValues Values { get; set; }
+        new public LikedValues Payload { get; set; }
     }
 
     public class LikedValues

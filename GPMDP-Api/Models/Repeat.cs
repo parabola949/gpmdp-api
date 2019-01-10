@@ -11,6 +11,6 @@ namespace GPMDP_Api.Models
     {
         [JsonProperty("payload")]
         [JsonConverter(typeof(RepeatTypeConverter))]
-        public RepeatType Type { get; set; }
+        new public RepeatType Payload { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GPMDP_Api.Models
 {
-    public class Track : Message
+    public class Track
     {
         public string album { get; set; }
         public string albumArt { get; set; }

@@ -8,6 +8,6 @@ namespace GPMDP_Api.Models
     public class TrackResult : Message
     {
         [JsonProperty("payload")]
-        public Track Track { get; set; }
+        new public Track Payload { get; set; }
     }
 }

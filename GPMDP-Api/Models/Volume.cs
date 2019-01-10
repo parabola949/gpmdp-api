@@ -8,6 +8,6 @@ namespace GPMDP_Api.Models
     public class Volume : Message
     {
         [JsonProperty("payload")]
-        public int Level { get; set; }
+        new public int Payload { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace GPMDP_Api.Models
     public class ApiVersion : Message
     {
         [JsonProperty("payload")]
-        public string Version { get; set; }
+        public new string Payload { get; set; }
     }
 }
