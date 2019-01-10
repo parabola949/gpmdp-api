@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using GPMDP_Api;
+using GPMDP_Api.Commands;
+
 using System.IO;
 namespace Testing
 {
@@ -33,8 +35,9 @@ namespace Testing
                         //play / pause
                         c.PlayPause();
                         break;
-                    case ConsoleKey.T:
-                        c.Forward();
+                    case ConsoleKey.Enter:
+                        var t = c.IsPlaying();
+                        Console.WriteLine(t);
                         break;
                        
                 }

@@ -1,39 +1,57 @@
-﻿using System;
+﻿using GPMDP_Api.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GPMDP_Api
+namespace GPMDP_Api.Commands
 {
-    public partial class Client
+    public static class Playback
     {
-        public void PlayPause()
+        public static void PlayPause(this Client c)
         {
-            SendCommand("playback", "playPause");
+            c.SendCommand("playback", "playPause");
         }
 
-        public void GetCurrentTime()
+        public static TimeSpan GetCurrentTime(this Client c)
         {
-            SendCommand("playback", "getCurrentTime");
+            var r = c.GetCommand("playback", "getCurrentTime").Result;
+            var ms = long.Parse(r.ToString());
+            return TimeSpan.FromMilliseconds(ms);
         }
 
-        public void SetCurrentTime(long milliseconds)
+        public static void SetCurrentTime(this Client c, long milliseconds)
         {
-            SendCommand("playback", "setCurrentTime", milliseconds);
+            c.SendCommand("playback", "setCurrentTime", milliseconds);
         }
 
-        public void GetTotalTime()
+        public static TimeSpan GetTotalTime(this Client c)
         {
-            SendCommand("playback", "getTotalTime");
+            var r = c.GetCommand("playback", "getTotalTime").Result;
+            var ms = long.Parse(r.ToString());
+            return TimeSpan.FromMilliseconds(ms);
         }
 
-        public void Rewind()
+        public static Track GetCurrentTrack(this Client c)
         {
-            SendCommand("playback", "rewind");
+            var r = c.GetCommand("playback", "getCurrentTrack").Result;
+            return JsonConvert.DeserializeObject<Track>(r);
         }
 
-        public void Forward()
+        public static bool IsPlaying(this Client c)
         {
-            SendCommand("playback", "forward");
+            return bool.Parse(c.GetCommand("playback", "isPlaying").Result);
+        }
+
+
+        public static void Rewind(this Client c)
+        {
+            c.SendCommand("playback", "rewind");
+        }
+
+        public static void Forward(this Client c)
+        {
+            c.SendCommand("playback", "forward");
         }
     }
 }

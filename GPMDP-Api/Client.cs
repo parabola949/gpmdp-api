@@ -7,6 +7,8 @@ using System.IO;
 using System.Reflection;
 using WebSocketSharp;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GPMDP_Api
 {
@@ -29,7 +31,13 @@ namespace GPMDP_Api
             _ws = new WebSocket($"ws://{Uri}:{Port}");
             _ws.OnMessage += _ws_OnMessage;
             _ws.OnError += _ws_OnError;
+            ResultReceived += Client_ResultReceived;
             _ws.Connect();
+        }
+
+        private void Client_ResultReceived(object sender, Result e)
+        {
+            _results[e.RequestId] = e;
         }
 
         public void Connect(string authCode = null)
@@ -37,15 +45,47 @@ namespace GPMDP_Api
             SendCommand("connect", "connect", new[] { AppName, authCode });
         }
 
-        public void SendCommand(string ns, string method, object arguments = null)
+        public void SendCommand(string ns, string method, params object[] args)
         {
             var c = new Command
             {
                 Namespace = ns,
                 Method = method,
-                Arguments = arguments
+                Arguments = args
             };
             _ws.Send(JsonConvert.SerializeObject(c));
+        }
+
+        private int reqId = 0;
+        private Dictionary<int, Result> _results = new Dictionary<int, Result>();
+        public async Task<string> GetCommand(string ns, string method)
+        {
+            reqId++;
+            var thisReq = reqId;
+            var c = new Command
+            {
+                Namespace = ns,
+                Method = method,
+                RequestId = thisReq
+            };
+            object r = null;
+            string type = null;
+            _results.Add(thisReq, null);
+            var json = JsonConvert.SerializeObject(c, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            _ws.Send(json);
+            while (_results[thisReq] == null)
+            {
+                await Task.Delay(25);
+            }
+            type = _results[thisReq].Type;
+            r = _results[thisReq].Value;
+            _results.Remove(thisReq);
+            if (type != "error")
+                return r.ToString();
+            else
+                throw new Exception(r.ToString());
+
+            
         }
 
         private void _ws_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
@@ -55,11 +95,18 @@ namespace GPMDP_Api
 
         private void _ws_OnMessage(object sender, MessageEventArgs e)
         {
+            
             var m = new Message().ToObject(e.Data);
             if (m == null)
             {
-                //DEBUG, checking for messages we don't know about
-                Console.WriteLine(e.Data);
+                
+                var r = JsonConvert.DeserializeObject<Result>(e.Data);
+                if (r?.Namespace == "result")
+                {
+                    ResultReceived?.Invoke(this, r);
+                }
+                else //DEBUG, checking for messages we don't know about
+                    Console.WriteLine(e.Data);
                 return;
             }
 
@@ -102,6 +149,7 @@ namespace GPMDP_Api
         public event EventHandler<Contents> LibraryReceived;
         public event EventHandler<string> ConnectReceived;
         public event EventHandler<Message> MessageReceived;
+        internal event EventHandler<Result> ResultReceived;
         #endregion
     }
 }

@@ -5,15 +5,15 @@ using Newtonsoft.Json;
 
 namespace GPMDP_Api.Models
 {
-    public class Command
+    public class Result : Message
     {
         [JsonProperty("namespace")]
         public string Namespace { get; set; }
-        [JsonProperty("method")]
-        public string Method { get; set; }
-        [JsonProperty("arguments")]
-        public object Arguments { get; set; }
-        [JsonProperty("requestID")]
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("value")]
+        public object Value { get; set; }
+        [JsonProperty("requestId")]
         public int RequestId { get; set; }
     }
 }
