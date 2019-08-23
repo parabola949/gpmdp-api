@@ -4,6 +4,9 @@ using GPMDP_Api;
 using GPMDP_Api.Playback;
 
 using System.IO;
+using GPMDP_Api.Enums;
+using GPMDP_Api.Extras;
+
 namespace Testing
 {
     class Program
@@ -34,7 +37,6 @@ namespace Testing
             //authenticate, enables controls
             c.Authenticate(AuthCode);
 
-
             while (true)
             {
                 var k = Console.ReadKey(true);
@@ -47,8 +49,13 @@ namespace Testing
                         //play / pause
                         c.PlayPause();
                         break;
+                    case ConsoleKey.A:
+                        //testing random commands
+                        c.RewindTenAsync();
+
+                        break;
                     case ConsoleKey.Enter:
-                        var t = c.IsPlaying();
+                        var t = c.ToggleShuffleAsync().Result;
                         Console.WriteLine(t);
                         break;
                        

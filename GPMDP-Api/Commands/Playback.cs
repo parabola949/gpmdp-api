@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GPMDP_Api.Playback
 {
@@ -24,9 +25,9 @@ namespace GPMDP_Api.Playback
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static TimeSpan GetCurrentTime(this Client c)
+        public static async Task<TimeSpan> GetCurrentTimeAsync(this Client c)
         {
-            var r = c.GetCommand("playback", "getCurrentTime").Result;
+            var r = await c.GetCommand("playback", "getCurrentTime");
             var ms = long.Parse(r.ToString());
             return TimeSpan.FromMilliseconds(ms);
         }
@@ -57,9 +58,9 @@ namespace GPMDP_Api.Playback
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static TimeSpan GetTotalTime(this Client c)
+        public static async Task<TimeSpan> GetTotalTimeAsync(this Client c)
         {
-            var r = c.GetCommand("playback", "getTotalTime").Result;
+            var r = await c.GetCommand("playback", "getTotalTime");
             var ms = long.Parse(r.ToString());
             return TimeSpan.FromMilliseconds(ms);
         }
@@ -70,9 +71,9 @@ namespace GPMDP_Api.Playback
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static Track GetCurrentTrack(this Client c)
+        public static async Task<Track> GetCurrentTrackAsync(this Client c)
         {
-            var r = c.GetCommand("playback", "getCurrentTrack").Result;
+            var r = await c.GetCommand("playback", "getCurrentTrack");
             return JsonConvert.DeserializeObject<Track>(r);
         }
 
@@ -81,9 +82,9 @@ namespace GPMDP_Api.Playback
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static bool IsPlaying(this Client c)
+        public static async Task<bool> IsPlayingAsync(this Client c)
         {
-            return bool.Parse(c.GetCommand("playback", "isPlaying").Result);
+            return bool.Parse(await c.GetCommand("playback", "isPlaying"));
         }
 
         /// <summary>
@@ -104,64 +105,90 @@ namespace GPMDP_Api.Playback
             c.SendCommand("playback", "forward");
         }
 
-        public static object GetPlaybackState()
+        public static async Task<PlaybackStatus> GetPlaybackStateAsync(this Client c)
         {
-            throw new NotImplementedException();
+            var r = await c.GetCommand("playback", "getPlaybackState");
+            return Enum.Parse<PlaybackStatus>(r);
         }
 
-        public static ShuffleType GetShuffle()
+        public static async Task<ShuffleType> GetShuffleAsync(this Client c)
         {
-            throw new NotImplementedException();
+            var val = await c.GetCommand("playback", "getShuffle");
+            switch (val)
+            {
+                case "ALL_SHUFFLE":
+                    return ShuffleType.All;
+                case "NO_SHUFFLE":
+                    return ShuffleType.None;
+                default:
+                    return ShuffleType.Unknown;
+            }
         }
 
-        public static void SetShuffle(ShuffleType type)
+        public static void SetShuffle(this Client c, ShuffleType type)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "setShuffle", type.ToString());
         }
 
-        public static ShuffleType ToggleShuffle()
+        public static async Task<ShuffleType> ToggleShuffleAsync(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "toggleShuffle");
+            return await c.GetShuffleAsync();
         }
 
-        public static RepeatType GetRepeat()
+        public static async Task<RepeatType> GetRepeatAsync(this Client c)
         {
-            throw new NotImplementedException();
+            var val = await c.GetCommand("playback", "getRepeat");
+            switch (val)
+            {
+                case "LIST_REPEAT":
+                    return RepeatType.List;
+                case "SINGLE_REPEAT":
+                    return RepeatType.Single;
+                case "NO_REPEAT":
+                    return RepeatType.None;
+                default:
+                    return RepeatType.Unknown;
+            }
         }
 
-        public static void SetRepeat(RepeatType type)
+        public static void SetRepeat(this Client c, RepeatType type)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "setRepeat", type.ToString());
         }
 
-        public static RepeatType ToggleRepeat()
+        public static async Task<RepeatType> ToggleRepeatAsync(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "toggleRepeat");
+            return await c.GetRepeatAsync();
         }
         
-        public static bool IsPodcast()
+        public static bool IsPodcast(this Client c)
         {
-            throw new NotImplementedException();
+            return bool.Parse(c.GetCommand("playback", "isPodcast").Result);
         }
 
-        public static TimeSpan RewindTen()
+        public static async Task<TimeSpan> RewindTenAsync(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "rewindTen");
+            return await c.GetCurrentTimeAsync();
         }
 
-        public static TimeSpan ForwardThirty()
+        public static async Task<TimeSpan> ForwardThirtyAsync(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "forwardThirty");
+            return await c.GetCurrentTimeAsync();
         }
 
-        public static void ToggleVisualization()
+        public static void ToggleVisualization(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "toggleVisualization");
         }
 
-        public static void ImFeelingLucky()
+        public static void ImFeelingLucky(this Client c)
         {
-            throw new NotImplementedException();
+            c.SendCommand("playback", "startFeelingLucky");
         }
     }
+
 }
